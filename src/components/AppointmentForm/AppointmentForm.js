@@ -1,45 +1,68 @@
 import React, { Component } from 'react'
 import ReactCalendar from 'react-calendar';
+import { TimeInput } from '../TimeInput';
+
+import './AppointmentForm.scss';
 
 export default class AppointmentForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      start : new Date(),
-      end: new Date(),
+      start                 : undefined,
+      end                   : undefined,
+      scheduledAppointments : [],
     }
-    this.onChange = this.onChange.bind(this);
+    this.onChangeStart = this.onChangeStart.bind(this);
+    this.onChangeEnd   = this.onChangeEnd.bind(this);
   }
 
-  onChange(event) {
-    console.log(event);
+  onChangeStart(date) {
+    console.log(date);
+    this.setState({
+      start:date
+    });
+  }
+
+  onChangeEnd(date) {
+    console.log(date);
+    this.setState({
+      end:date
+    });
   }
 
   render() {
+    const {className = ''} = this.props;
     const {start, end} = this.state;
     return (
-      <div>
-        <article>
+      <section className={`appointment-form ${className}`}>
+        <article className="date-entry">
           <header>Pick Appointment Date</header>
           <ReactCalendar
+            className="picker"
             value={start}
             onChange={this.onStartChange}
             showNavigation
             showWeekNumbers
           />
         </article>
-        <article>
+        <article className="time-entry">
           <header>Pick Appointment Time</header>
-          <section>
+          <section className="time-entry-start">
             <label>Start</label>
-            <input type="time" />
+            <TimeInput
+              onChange={this.onChangeStart}
+              value={start}
+            />
           </section>
-          <section>
+          <section className="time-entry-end">
             <label>End</label>
-            <input type="time" />
+            <TimeInput
+              onChange={this.onChangeEnd}
+              value={end}
+            />
           </section>
         </article>
-      </div>
+      </section>
     )
   }
 }

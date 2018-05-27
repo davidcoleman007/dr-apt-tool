@@ -79,6 +79,11 @@ export default class AppointmentForm extends Component {
         return prev;
       }, []
     );
+    todaysApts.sort(
+      (a,b) => {
+        return (a.end.getTime() < b.start.getTime())?-1:1
+      }
+    );
     return todaysApts;
   }
 

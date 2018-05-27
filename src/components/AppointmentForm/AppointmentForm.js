@@ -240,7 +240,7 @@ export default class AppointmentForm extends Component {
           </header>
         }
         <article className="date-entry">
-          <header><h2>Pick Appointment Date</h2></header>
+          <header><h2>Pick Appointment Date / Time</h2></header>
           <ReactCalendar
             className="picker"
             value={day}
@@ -249,7 +249,6 @@ export default class AppointmentForm extends Component {
           />
         </article>
         <article className="time-entry">
-          <header><h2>Pick Appointment Time</h2></header>
           <section className="time-entry-start">
             <label>Start</label>
             <TimeInput

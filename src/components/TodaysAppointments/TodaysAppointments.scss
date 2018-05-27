@@ -1,0 +1,9 @@
+.todays-appointments {
+  .appointments-list {
+    .appointment-item {
+      &.highlight {
+        color: red;
+      }
+    }
+  }
+}

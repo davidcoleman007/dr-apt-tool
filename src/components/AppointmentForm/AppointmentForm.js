@@ -36,6 +36,11 @@ export default class AppointmentForm extends Component {
     this.submitAptClick        = this.submitAptClick.bind(this);
   }
 
+  /**
+   * handler for changing the currently selected day
+   *
+   * @param {Date} day the new selected day
+   */
   onChangeDay(day) {
     const {start, end} = this.state;
     const newStart = this.getTimeForSelectedDay(start, day);
@@ -57,6 +62,11 @@ export default class AppointmentForm extends Component {
     this.checkOverlap(newApt, todaysApts);
   }
 
+  /**
+   * Returns a sorted list of appointments for the day provided
+   *
+   * @param {Object} day the day to get appointments for
+   */
   getTodaysAppointments(day) {
     const {aptData} = this.state;
     let tmpDate = new Date();
@@ -87,10 +97,22 @@ export default class AppointmentForm extends Component {
     return todaysApts;
   }
 
+  /**
+   * return a new Date object set to the date of the `day` argument
+   * with the time of the `time` argument
+   *
+   * @param {Date} time a date object containing the time information
+   * @param {Date} day a reference date object establishing which day to use
+   */
   getTimeForSelectedDay(time, day) {
     return new Date(Date.parse(day.toDateString() + ' ' + time.toTimeString()));
   }
 
+  /**
+   * handler for start time input events
+   *
+   * @param {Date} start the new start time
+   */
   onChangeStart(start) {
     const {day, end, todaysApts} = this.state;
     const newStart = this.getTimeForSelectedDay(start, day);
@@ -107,6 +129,11 @@ export default class AppointmentForm extends Component {
     this.checkOverlap(newApt, todaysApts);
   }
 
+  /**
+   * handler for end time input events
+   *
+   * @param {Date} end the new end time
+   */
   onChangeEnd(end) {
     const {day, start, todaysApts} = this.state;
     const newEnd = this.getTimeForSelectedDay(end, day);
@@ -123,6 +150,11 @@ export default class AppointmentForm extends Component {
     this.checkOverlap(newApt, todaysApts);
   }
 
+  /**
+   * check that the start time is earlier than the end time
+   *
+   * @param {Object} newApt Object containing `day`, `start`, and `end` Dates
+   */
   checkEnd(newApt) {
     if(newApt && newApt.day &&
       newApt.start && newApt.end &&
@@ -137,6 +169,11 @@ export default class AppointmentForm extends Component {
     });
   }
 
+  /**
+   * check that the appointment is in the future
+   *
+   * @param {Appointment} newApt Object containing `day`, `start`, and `end` Dates
+   */
   checkFuture(newApt) {
     const now = (new Date()).getTime();
     if(newApt && newApt.day && newApt.start &&
@@ -151,6 +188,12 @@ export default class AppointmentForm extends Component {
     });
   }
 
+  /**
+   * Check if the new appointment overlaps with any existing appointments
+   *
+   * @param {Appointment} newApt the new appointment to test
+   * @param {Array<Appointment>} todaysApts An array of the appointments scheduled for today
+   */
   checkOverlap(newApt, todaysApts) {
     // const {aptData} = this.state;
     let overlapErr = false;
@@ -197,6 +240,10 @@ export default class AppointmentForm extends Component {
     });
   }
 
+  /**
+   * Save the appointment in local state
+   * (later we can call a prop callback)
+   */
   submitAptClick() {
     const {day, end, start} = this.state;
     this.setState({
@@ -211,6 +258,9 @@ export default class AppointmentForm extends Component {
     });
   }
 
+  /**
+   * do stuff
+   */
   render() {
     const {className = ''} = this.props;
     const {

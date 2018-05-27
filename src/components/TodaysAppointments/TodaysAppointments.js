@@ -25,7 +25,7 @@ export const TodaysAppointments = (props) => {
               const highlightClass = (highlight.indexOf(idx) !== -1)?'highlight':'';
               const itemClassName = `appointment-item ${highlightClass}`;
               return (
-                <li className={itemClassName}>
+                <li className={itemClassName} key={`todays-apt-item-${idx}`}>
                   {start.toLocaleTimeString('en-US', {
                     hour: 'numeric',
                     minute: 'numeric',

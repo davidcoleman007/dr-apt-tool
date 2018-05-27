@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+
 import AppointmentForm from './components/AppointmentForm/AppointmentForm';
+
+import './App.css';
 
 class App extends Component {
   render() {

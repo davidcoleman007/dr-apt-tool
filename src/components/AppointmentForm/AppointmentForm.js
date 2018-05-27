@@ -4,6 +4,7 @@ import { TimeInput } from '../TimeInput';
 
 import './AppointmentForm.scss';
 import { TodaysAppointments } from '../TodaysAppointments/TodaysAppointments';
+import Warnings from './Warnings';
 
 class InitialState extends Object {
   constructor() {
@@ -13,7 +14,7 @@ class InitialState extends Object {
     this.end        = new Date(Date.parse(new Date().toDateString()));
     this.futureErr  = false;
     this.highlight  = [];
-    this.overlap    = false;
+    this.overlapErr    = false;
     this.rangeErr   = false;
     this.start      = new Date(Date.parse(new Date().toDateString()));
     this.todaysApts = [];
@@ -147,7 +148,7 @@ export default class AppointmentForm extends Component {
 
   checkOverlap(newApt, todaysApts) {
     // const {aptData} = this.state;
-    let overlap = false;
+    let overlapErr = false;
     let highlight = [];
     todaysApts.forEach((apt, idx) => {
       // don't bother if we dont have at a minimum the day and a start or end
@@ -169,7 +170,7 @@ export default class AppointmentForm extends Component {
           (newApt.end && newApt.start.getTime() <= apt.start.getTime())
         )) {
           // then it overlaps
-          overlap = true;
+          overlapErr = true;
         }
         // if it starts after this apt ends
         if(newApt.start && newApt.start.getTime() > apt.end.getTime()) {
@@ -182,12 +183,12 @@ export default class AppointmentForm extends Component {
           return;
         }
         highlight.push(idx);
-        overlap = true;
+        overlapErr = true;
       }
     });
     this.setState({
       highlight,
-      overlap
+      overlapErr
     });
   }
 
@@ -212,7 +213,7 @@ export default class AppointmentForm extends Component {
       end,
       futureErr,
       highlight,
-      overlap,
+      overlapErr,
       rangeErr,
       start,
       todaysApts,
@@ -224,21 +225,7 @@ export default class AppointmentForm extends Component {
           day={day}
           highlight={highlight}
         />
-        {overlap &&
-          <header className="warning">
-            This appointment overlaps with another on your schedule
-          </header>
-        }
-        {futureErr &&
-          <header className="warning">
-            Appointments must be in the future
-          </header>
-        }
-        {rangeErr &&
-          <header className="warning">
-            Start time must be before End time
-          </header>
-        }
+        <Warnings overlapErr={overlapErr} futureErr={futureErr} rangeErr={rangeErr} />
         <article className="date-entry">
           <header><h2>Pick Appointment Date / Time</h2></header>
           <ReactCalendar
@@ -267,7 +254,7 @@ export default class AppointmentForm extends Component {
         <button
           className="save-button"
           onClick={this.submitAptClick}
-          disabled={!(day && start && end && !futureErr && !overlap && !rangeErr)}
+          disabled={!(day && start && end && !futureErr && !overlapErr && !rangeErr)}
         >Save Appointment</button>
       </section>
     )

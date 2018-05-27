@@ -35,7 +35,6 @@ export default class AppointmentForm extends Component {
 
   onChangeDay(day) {
     const {start, end} = this.state;
-    console.log('day', day);
     const newStart = this.getTimeForSelectedDay(start, day);
     const newEnd = this.getTimeForSelectedDay(end, day);
     const todaysApts = this.getTodaysAppointments(day);
@@ -88,7 +87,6 @@ export default class AppointmentForm extends Component {
 
   onChangeStart(start) {
     const {day, end, todaysApts} = this.state;
-    console.log('AppointmentForm::onChangeStart', start);
     const newStart = this.getTimeForSelectedDay(start, day);
     this.setState({
       start : newStart
@@ -107,7 +105,6 @@ export default class AppointmentForm extends Component {
 
   onChangeEnd(end) {
     const {day, start, todaysApts} = this.state;
-    console.log('end', end);
     const newEnd = this.getTimeForSelectedDay(end, day);
     this.setState({
       end : newEnd
@@ -162,7 +159,6 @@ export default class AppointmentForm extends Component {
           (newApt.end && newApt.start.getTime() <= apt.start.getTime())
         )) {
           // then it overlaps
-          console.log('overlap found', newApt, apt);
           overlap = true;
         }
         // if it starts after this apt ends
@@ -175,7 +171,6 @@ export default class AppointmentForm extends Component {
           // then it is ok
           return;
         }
-        console.log('overlapping index '+idx+' stored', apt.start.toString(), apt.end.toString());
         highlight.push(idx);
         overlap = true;
       }
@@ -213,7 +208,11 @@ export default class AppointmentForm extends Component {
     } = this.state;
     return (
       <section className={`appointment-form ${className}`}>
-        <TodaysAppointments apts={todaysApts} highlight={highlight}/>
+        <TodaysAppointments
+          apts={todaysApts}
+          day={day}
+          highlight={highlight}
+        />
         {overlap &&
           <header className="warning">
             This appointment overlaps with another on your schedule

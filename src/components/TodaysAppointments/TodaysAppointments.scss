@@ -1,4 +1,12 @@
 .todays-appointments {
+  header {
+    & > * {
+      margin: 1px;
+    }
+    display        : flex;
+    flex-direction : column;
+    width          : 100%;
+  }
   .appointments-list {
     .appointment-item {
       &.highlight {

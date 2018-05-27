@@ -3,11 +3,16 @@ import React from 'react';
 import './TodaysAppointments.scss';
 
 export const TodaysAppointments = (props) => {
-  const {apts, highlight} = props;
-  console.log('highlight indexes', highlight);
+  const {apts, day, highlight} = props;
   return (
     <article className="todays-appointments">
-      <header><h2>Today's Appointments:</h2></header>
+      <header>
+        <h2>Today's Appointments:</h2>
+        <h3>
+          {day && day.toDateString()}
+          {!day && <span>Select A Day Below</span>}
+        </h3>
+      </header>
       {((!apts || !apts.length) && (
         <summary>none</summary>
       )) || null}
@@ -16,7 +21,7 @@ export const TodaysAppointments = (props) => {
           {apts.map(
             (apt, idx) => {
               const {start, end} = apt;
-              // not so efficient but length will never be > 2
+              // not so efficient but length will never be that big
               const highlightClass = (highlight.indexOf(idx) !== -1)?'highlight':'';
               const itemClassName = `appointment-item ${highlightClass}`;
               return (

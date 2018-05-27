@@ -11,6 +11,7 @@ class InitialState extends Object {
     this.aptData    = [];
     this.day        = null;
     this.end        = new Date(Date.parse(new Date().toDateString()));
+    this.futureErr  = false;
     this.highlight  = [];
     this.overlap    = false;
     this.rangeErr   = false;
@@ -25,6 +26,7 @@ export default class AppointmentForm extends Component {
     this.state                 = new InitialState();
     this.checkOverlap          = this.checkOverlap.bind(this);
     this.checkEnd              = this.checkEnd.bind(this);
+    this.checkFuture           = this.checkFuture.bind(this);
     this.getTimeForSelectedDay = this.getTimeForSelectedDay.bind(this);
     this.getTodaysAppointments = this.getTodaysAppointments.bind(this);
     this.onChangeDay           = this.onChangeDay.bind(this);
@@ -44,16 +46,14 @@ export default class AppointmentForm extends Component {
       todaysApts,
       day,
     });
-    this.checkEnd({
+    const newApt = {
       start : newStart,
       end   : newEnd,
       day,
-    });
-    this.checkOverlap({
-      start : newStart,
-      end   : newEnd,
-      day,
-    }, todaysApts);
+    };
+    this.checkEnd(newApt);
+    this.checkFuture(newApt);
+    this.checkOverlap(newApt, todaysApts);
   }
 
   getTodaysAppointments(day) {
@@ -91,16 +91,14 @@ export default class AppointmentForm extends Component {
     this.setState({
       start : newStart
     });
-    this.checkEnd({
+    const newApt = {
       start : newStart,
       end,
       day,
-    });
-    this.checkOverlap({
-      start : newStart,
-      end,
-      day,
-    }, todaysApts);
+    };
+    this.checkEnd(newApt);
+    this.checkFuture(newApt);
+    this.checkOverlap(newApt, todaysApts);
   }
 
   onChangeEnd(end) {
@@ -109,16 +107,14 @@ export default class AppointmentForm extends Component {
     this.setState({
       end : newEnd
     });
-    this.checkEnd({
+    const newApt = {
       end : newEnd,
       start,
       day,
-    });
-    this.checkOverlap({
-      end : newEnd,
-      start,
-      day,
-    }, todaysApts);
+    };
+    this.checkEnd(newApt);
+    this.checkFuture(newApt);
+    this.checkOverlap(newApt, todaysApts);
   }
 
   checkEnd(newApt) {
@@ -132,6 +128,20 @@ export default class AppointmentForm extends Component {
     }
     this.setState({
       rangeErr: true
+    });
+  }
+
+  checkFuture(newApt) {
+    const now = (new Date()).getTime();
+    if(newApt && newApt.day && newApt.start &&
+      newApt.start.getTime() < now) {
+      this.setState({
+        futureErr: true
+      });
+      return;
+    }
+    this.setState({
+      futureErr: false
     });
   }
 
@@ -200,6 +210,7 @@ export default class AppointmentForm extends Component {
     const {
       day,
       end,
+      futureErr,
       highlight,
       overlap,
       rangeErr,
@@ -216,6 +227,11 @@ export default class AppointmentForm extends Component {
         {overlap &&
           <header className="warning">
             This appointment overlaps with another on your schedule
+          </header>
+        }
+        {futureErr &&
+          <header className="warning">
+            Appointments must be in the future
           </header>
         }
         {rangeErr &&
@@ -252,7 +268,7 @@ export default class AppointmentForm extends Component {
         <button
           className="save-button"
           onClick={this.submitAptClick}
-          disabled={!(day && start && end && !overlap && !rangeErr)}
+          disabled={!(day && start && end && !futureErr && !overlap && !rangeErr)}
         >Save Appointment</button>
       </section>
     )
